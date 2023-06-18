@@ -1,67 +1,39 @@
-"use strict";
-
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.ProductComponent = void 0;
-var _react = _interopRequireWildcard(require("react"));
-var _propTypes = _interopRequireDefault(require("prop-types"));
-var _ProductContext = require("../../contexts/ProductContext");
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { useProduct, PRODUCT_ACTIONS } from '../../contexts/ProductContext';
+
 /**
  * Component to manage login behavior without UI component
  */
-var ProductComponent = function ProductComponent(props) {
-  var product = props.product,
-    UIComponent = props.UIComponent;
-  var _useProduct = (0, _ProductContext.useProduct)(),
-    _useProduct2 = _slicedToArray(_useProduct, 2),
-    ingredients = _useProduct2[0].ingredients,
-    dispatchIngredients = _useProduct2[1];
-  var _useProduct3 = (0, _ProductContext.useProduct)(),
-    _useProduct4 = _slicedToArray(_useProduct3, 2),
-    options = _useProduct4[0].options,
-    dispatchOptions = _useProduct4[1];
-  var _useState = (0, _react.useState)(1),
-    _useState2 = _slicedToArray(_useState, 2),
-    productCount = _useState2[0],
-    setProductCount = _useState2[1];
-  var _useState3 = (0, _react.useState)(product.price),
-    _useState4 = _slicedToArray(_useState3, 2),
-    productPrice = _useState4[0],
-    setProductPrice = _useState4[1];
-  var _useState5 = (0, _react.useState)(''),
-    _useState6 = _slicedToArray(_useState5, 2),
-    note = _useState6[0],
-    setNote = _useState6[1];
-  var initIngredients = function initIngredients() {
-    var ingredientList = product.ingredients;
-    for (var idx = 0; idx < ingredientList.length; idx++) {
+export const ProductComponent = props => {
+  const {
+    product,
+    UIComponent
+  } = props;
+  const [{
+    ingredients
+  }, dispatchIngredients] = useProduct();
+  const [{
+    options
+  }, dispatchOptions] = useProduct();
+  const [productCount, setProductCount] = useState(1);
+  const [productPrice, setProductPrice] = useState(product.price);
+  const [note, setNote] = useState('');
+  const initIngredients = () => {
+    let ingredientList = product.ingredients;
+    for (let idx = 0; idx < ingredientList.length; idx++) {
       ingredientList[idx]['isChecked'] = true;
     }
     dispatchIngredients({
-      type: _ProductContext.PRODUCT_ACTIONS.CHANGE_INGREDIENTS,
+      type: PRODUCT_ACTIONS.CHANGE_INGREDIENTS,
       ingredients: ingredientList
     });
   };
-  var isCheckedRespectOption = function isCheckedRespectOption(options, respectId) {
-    for (var oIdx = 0; oIdx < options.length; oIdx++) {
-      var subOptionList = options[oIdx].suboptions;
-      for (var sIdx = 0; sIdx < subOptionList.length; sIdx++) {
+  const isCheckedRespectOption = (options, respectId) => {
+    for (let oIdx = 0; oIdx < options.length; oIdx++) {
+      let subOptionList = options[oIdx].suboptions;
+      for (let sIdx = 0; sIdx < subOptionList.length; sIdx++) {
         if (subOptionList[sIdx].id == respectId) {
           return subOptionList[sIdx].isChecked;
         }
@@ -69,18 +41,14 @@ var ProductComponent = function ProductComponent(props) {
     }
     return false;
   };
-  var initOptions = function initOptions() {
+  const initOptions = () => {
     // console.log('===== Init options =====');
-    var optionList = [];
-    var extras = product.extras;
-    for (var eIdx = 0; eIdx < extras.length; eIdx++) {
-      optionList.push.apply(optionList, _toConsumableArray(extras[eIdx].options));
-    }
-    for (var oIdx = 0; oIdx < optionList.length; oIdx++) {
-      var option = optionList[oIdx];
+    let optionList = product.options;
+    for (let oIdx = 0; oIdx < optionList.length; oIdx++) {
+      let option = optionList[oIdx];
       option['isDisplay'] = true;
       if (option.conditioned) {
-        var respectId = option.respect_to;
+        let respectId = option.respect_to;
         if (typeof respectId == 'undefined' || respectId === '' || respectId == 'null') {
           option['isDisplay'] = false;
         }
@@ -88,44 +56,44 @@ var ProductComponent = function ProductComponent(props) {
           option['isDisplay'] = false;
         }
       }
-      var subOptionList = option.suboptions;
-      for (var sIdx = 0; sIdx < subOptionList.length; sIdx++) {
+      let subOptionList = option.suboptions;
+      for (let sIdx = 0; sIdx < subOptionList.length; sIdx++) {
         subOptionList[sIdx]['isChecked'] = false;
       }
     }
     dispatchOptions({
-      type: _ProductContext.PRODUCT_ACTIONS.CHANGE_OPTIONS,
+      type: PRODUCT_ACTIONS.CHANGE_OPTIONS,
       options: optionList
     });
   };
-  (0, _react.useEffect)(function () {
+  useEffect(() => {
     // console.log('===== use effect =====');
     initIngredients();
     initOptions();
   }, []);
-  var onShare = function onShare() {
+  const onShare = () => {
     if (props.onShare) {
       props.onShare(product);
     }
   };
-  var onClose = function onClose() {
+  const onClose = () => {
     if (props.onClose) {
       props.onClose();
     }
   };
-  var onChangedIngredient = function onChangedIngredient(index) {
+  const onChangedIngredient = index => {
     // console.log('===== On changed ingredient =====');
     ingredients[index].isChecked = !ingredients[index].isChecked;
     dispatchIngredients({
-      type: _ProductContext.PRODUCT_ACTIONS.CHANGE_INGREDIENTS,
+      type: PRODUCT_ACTIONS.CHANGE_INGREDIENTS,
       ingredients: ingredients
     });
   };
-  var onChangedOption = function onChangedOption(optionIndex, subOptionIndex, optionType) {
+  const onChangedOption = (optionIndex, subOptionIndex, optionType) => {
     // console.log("===== On changed option =====");
     if (optionType) {
       // radio button
-      for (var sIdx = 0; sIdx < options[optionIndex].suboptions.length; sIdx++) {
+      for (let sIdx = 0; sIdx < options[optionIndex].suboptions.length; sIdx++) {
         options[optionIndex].suboptions[sIdx].isChecked = false;
       }
       options[optionIndex].suboptions[subOptionIndex].isChecked = true;
@@ -133,11 +101,11 @@ var ProductComponent = function ProductComponent(props) {
       // checkbox
       options[optionIndex].suboptions[subOptionIndex].isChecked = !options[optionIndex].suboptions[subOptionIndex].isChecked;
     }
-    for (var oIdx = 0; oIdx < options.length; oIdx++) {
-      var option = options[oIdx];
+    for (let oIdx = 0; oIdx < options.length; oIdx++) {
+      let option = options[oIdx];
       option['isDisplay'] = true;
       if (option.conditioned) {
-        var respectId = option.respect_to;
+        let respectId = option.respect_to;
         if (typeof respectId == 'undefined' || respectId === '' || respectId == 'null') {
           option['isDisplay'] = false;
         }
@@ -148,40 +116,40 @@ var ProductComponent = function ProductComponent(props) {
     }
     calculatePrice(productCount, options);
     dispatchOptions({
-      type: _ProductContext.PRODUCT_ACTIONS.CHANGE_OPTIONS,
+      type: PRODUCT_ACTIONS.CHANGE_OPTIONS,
       options: options
     });
   };
-  var calculatePrice = function calculatePrice(pCount, optionList) {
-    var optionPrice = 0;
-    for (var oIdx = 0; oIdx < optionList.length; oIdx++) {
+  const calculatePrice = (pCount, optionList) => {
+    let optionPrice = 0;
+    for (let oIdx = 0; oIdx < optionList.length; oIdx++) {
       if (optionList[oIdx].isDisplay == false) continue;
-      var subOptionList = optionList[oIdx].suboptions;
-      for (var sIdx = 0; sIdx < subOptionList.length; sIdx++) {
+      let subOptionList = optionList[oIdx].suboptions;
+      for (let sIdx = 0; sIdx < subOptionList.length; sIdx++) {
         if (subOptionList[sIdx].isChecked) {
           optionPrice = optionPrice + parseFloat(subOptionList[sIdx].price);
         }
       }
     }
-    var price = (parseFloat(product.price) + optionPrice) * pCount;
+    let price = (parseFloat(product.price) + optionPrice) * pCount;
     setProductPrice(price);
   };
-  var onChangedNote = function onChangedNote(e) {
+  const onChangedNote = e => {
     setNote(e.target.value);
   };
-  var onClickedButtonPlus = function onClickedButtonPlus() {
+  const onClickedButtonPlus = () => {
     // console.log('===== on click button plus =====');
     setProductCount(productCount + 1);
     calculatePrice(productCount + 1, options);
   };
-  var onClickedButtonMinus = function onClickedButtonMinus() {
+  const onClickedButtonMinus = () => {
     // console.log('===== on click button minues =====');
     if (productCount > 1) {
       setProductCount(productCount - 1);
       calculatePrice(productCount - 1, options);
     }
   };
-  var onClickedButtonAdd = function onClickedButtonAdd() {
+  const onClickedButtonAdd = () => {
     if (props.onClickedButtonAdd) {
       product['ingredients'] = ingredients;
       product['options'] = options;
@@ -190,7 +158,7 @@ var ProductComponent = function ProductComponent(props) {
       props.onAdd(product);
     }
   };
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, UIComponent && /*#__PURE__*/React.createElement(UIComponent, _extends({}, props, {
     onShare: onShare,
     onClose: onClose,
     productName: product.name,
@@ -208,62 +176,61 @@ var ProductComponent = function ProductComponent(props) {
     onClickedButtonAdd: onClickedButtonAdd
   })));
 };
-exports.ProductComponent = ProductComponent;
 ProductComponent.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
-  UIComponent: _propTypes.default.elementType,
+  UIComponent: PropTypes.elementType,
   /**
    * Custom function to check the sub-option is checked
    * @param
    * extraIndex, respectId
    * respectId is 'respect_to' field
    */
-  onShare: _propTypes.default.func,
-  onClose: _propTypes.default.func,
-  productName: _propTypes.default.string,
-  productLogo: _propTypes.default.string,
-  productCount: _propTypes.default.number,
-  productPrice: _propTypes.default.number,
-  ingredients: _propTypes.default.array,
-  options: _propTypes.default.array,
-  note: _propTypes.default.array,
-  onChangedIngredient: _propTypes.default.func,
-  onChangedOption: _propTypes.default.func,
-  onChangedNote: _propTypes.default.func,
+  onShare: PropTypes.func,
+  onClose: PropTypes.func,
+  productName: PropTypes.string,
+  productLogo: PropTypes.string,
+  productCount: PropTypes.number,
+  productPrice: PropTypes.number,
+  ingredients: PropTypes.array,
+  options: PropTypes.array,
+  note: PropTypes.array,
+  onChangedIngredient: PropTypes.func,
+  onChangedOption: PropTypes.func,
+  onChangedNote: PropTypes.func,
   /**
    * Custom function to control the product number
    */
-  onClickedButtonPlus: _propTypes.default.func,
+  onClickedButtonPlus: PropTypes.func,
   /**
    * Custom function to control the product number
    */
-  onClickedButtonMinues: _propTypes.default.func,
+  onClickedButtonMinues: PropTypes.func,
   /**
    * Custom function to add the product to the cart
    */
-  onClickedButtonAdd: _propTypes.default.func,
+  onClickedButtonAdd: PropTypes.func,
   /**
    * Components types before login form
    * Array of type components, the parent props will pass to these components
    */
-  beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
+  beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
    * Components types after login form
    * Array of type components, the parent props will pass to these components
    */
-  afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
+  afterComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
    * Elements before login form
    * Array of HTML/Components elements, these components will not get the parent props
    */
-  beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
+  beforeElements: PropTypes.arrayOf(PropTypes.element),
   /**
    * Elements after login form
    * Array of HTML/Components elements, these components will not get the parent props
    */
-  afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
+  afterElements: PropTypes.arrayOf(PropTypes.element)
 };
 ProductComponent.defaultProps = {
   productName: ''

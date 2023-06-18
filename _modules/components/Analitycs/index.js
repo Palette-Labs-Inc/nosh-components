@@ -1,34 +1,14 @@
-"use strict";
-
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Analytics = void 0;
-var _react = _interopRequireWildcard(require("react"));
-var _EventContext = require("../../contexts/EventContext");
-var _propTypes = _interopRequireDefault(require("prop-types"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-var Analytics = function Analytics(props) {
-  var trackId = props.trackId,
-    children = props.children;
-  var _useEvent = (0, _EventContext.useEvent)(),
-    _useEvent2 = _slicedToArray(_useEvent, 1),
-    events = _useEvent2[0];
-  var _useState = (0, _react.useState)(false),
-    _useState2 = _slicedToArray(_useState, 2),
-    analyticsReady = _useState2[0],
-    setAnalyticsReady = _useState2[1];
-  (0, _react.useEffect)(function () {
-    var _window;
+import React, { useEffect, useState } from 'react';
+import { useEvent } from '../../contexts/EventContext';
+import PropTypes from 'prop-types';
+export const Analytics = props => {
+  const {
+    trackId,
+    children
+  } = props;
+  const [events] = useEvent();
+  const [analyticsReady, setAnalyticsReady] = useState(false);
+  useEffect(() => {
     if (!trackId) {
       return;
     }
@@ -38,12 +18,12 @@ var Analytics = function Analytics(props) {
       }
       return;
     }
-    var js = window.document.createElement('script');
+    const js = window.document.createElement('script');
     js.id = 'google-analytics-sdk';
     js.async = true;
     js.defer = true;
     js.src = 'https://www.google-analytics.com/analytics.js';
-    js.onload = ((_window = window) === null || _window === void 0 ? void 0 : _window.ga) && function () {
+    js.onload = window?.ga && function () {
       setAnalyticsReady(true);
       window.ga('create', trackId);
       window.ga('require', 'ec');
@@ -51,7 +31,7 @@ var Analytics = function Analytics(props) {
       window.ga('send', 'pageview');
     };
     window.document.body.appendChild(js);
-    return function () {
+    return () => {
       js.onload = null;
     };
   }, [trackId]);
@@ -60,11 +40,11 @@ var Analytics = function Analytics(props) {
    * Method to handle Pageview send to analytics
    * @param {String} pageName
    */
-  var handlechangeView = function handlechangeView(pageName) {
-    window.ga('set', 'page', pageName === null || pageName === void 0 ? void 0 : pageName.page);
+  const handlechangeView = pageName => {
+    window.ga('set', 'page', pageName?.page);
     window.ga('send', 'pageview');
   };
-  var handleClickProduct = function handleClickProduct(product) {
+  const handleClickProduct = product => {
     window.ga('ec:addProduct', {
       id: product.id,
       name: product.name,
@@ -74,7 +54,7 @@ var Analytics = function Analytics(props) {
     window.ga('ec:setAction', 'click');
     window.ga('send', 'event', 'UI', 'click', 'add to cart');
   };
-  var handleProductAdded = function handleProductAdded(product) {
+  const handleProductAdded = product => {
     window.ga('ec:addProduct', {
       id: product.id,
       name: product.name,
@@ -85,16 +65,15 @@ var Analytics = function Analytics(props) {
     window.ga('ec:setAction', 'add');
     window.ga('send', 'event', 'UI', 'click', 'add to cart');
   };
-  var handleLogin = function handleLogin(data) {
+  const handleLogin = data => {
     window.ga('set', 'userId', data.id);
   };
-  var handleOrderPlaced = function handleOrderPlaced(order) {
-    var _order$business;
+  const handleOrderPlaced = order => {
     window.ga('ec:setAction', 'purchase', {
       // Transaction details are provided in an actionFieldObject.
       id: order.id,
       // (Required) Transaction id (string).
-      affiliation: (_order$business = order.business) === null || _order$business === void 0 ? void 0 : _order$business.name,
+      affiliation: order.business?.name,
       // Affiliation (string).
       revenue: order.total,
       // Revenue (number).
@@ -104,7 +83,7 @@ var Analytics = function Analytics(props) {
     });
   };
 
-  (0, _react.useEffect)(function () {
+  useEffect(() => {
     console.log('Analytic Ready');
     if (analyticsReady && window.ga) {
       events.on('change_view', handlechangeView);
@@ -113,7 +92,7 @@ var Analytics = function Analytics(props) {
       events.on('product_added', handleProductAdded);
       events.on('order_placed', handleOrderPlaced);
     }
-    return function () {
+    return () => {
       if (analyticsReady && window.ga) {
         events.off('change_view', handlechangeView);
         events.off('userLogin', handleLogin);
@@ -123,14 +102,13 @@ var Analytics = function Analytics(props) {
       }
     };
   }, [analyticsReady]);
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, children);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, children);
 };
-exports.Analytics = Analytics;
 Analytics.propTypes = {
   /**
    * Your Google Analytics trackId
    * @see trackId What is trackID ? https://developers.google.com/analytics/devguides/collection/analyticsjs
    */
-  trackId: _propTypes.default.string.isRequired
+  trackId: PropTypes.string.isRequired
 };
 Analytics.defaultProps = {};

@@ -1,52 +1,36 @@
-"use strict";
-
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.MomentOption = void 0;
-var _react = _interopRequireWildcard(require("react"));
-var _propTypes = _interopRequireDefault(require("prop-types"));
-var _dayjs = _interopRequireDefault(require("dayjs"));
-var _isSameOrAfter = _interopRequireDefault(require("dayjs/plugin/isSameOrAfter"));
-var _utc = _interopRequireDefault(require("dayjs/plugin/utc"));
-var _OrderContext = require("../../contexts/OrderContext");
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-_dayjs.default.extend(_isSameOrAfter.default);
-_dayjs.default.extend(_utc.default);
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import utc from 'dayjs/plugin/utc';
+import { useOrder } from '../../contexts/OrderContext';
+dayjs.extend(isSameOrAfter);
+dayjs.extend(utc);
 
 /**
  * Component to manage moment option behavior without UI component
  */
-var MomentOption = function MomentOption(props) {
-  var _orderStatus$options, _orderStatus$options4;
-  var minDate = props.minDate,
-    maxDate = props.maxDate,
-    currentDate = props.currentDate,
-    useOrderContext = props.useOrderContext,
-    onChangeMoment = props.onChangeMoment,
-    UIComponent = props.UIComponent;
-  var _useOrder = (0, _OrderContext.useOrder)(),
-    _useOrder2 = _slicedToArray(_useOrder, 2),
-    orderStatus = _useOrder2[0],
-    changeMoment = _useOrder2[1].changeMoment;
+export const MomentOption = props => {
+  const {
+    minDate,
+    maxDate,
+    currentDate,
+    useOrderContext,
+    onChangeMoment,
+    UIComponent
+  } = props;
+  const [orderStatus, {
+    changeMoment
+  }] = useOrder();
 
   /**
    * Method to valid if a date is same of after current date
    * @param {String} date
    */
-  var validDate = function validDate(date) {
+  const validDate = date => {
     if (!date) return;
-    var _date = (0, _dayjs.default)(date, 'YYYY-MM-DD HH:mm').isSameOrAfter((0, _dayjs.default)(), 'day') ? (0, _dayjs.default)(date).format('YYYY-MM-DD HH:mm') : (0, _dayjs.default)().format('YYYY-MM-DD HH:mm');
+    const _date = dayjs(date, 'YYYY-MM-DD HH:mm').isSameOrAfter(dayjs(), 'day') ? dayjs(date).format('YYYY-MM-DD HH:mm') : dayjs().format('YYYY-MM-DD HH:mm');
     return _date;
   };
 
@@ -55,58 +39,40 @@ var MomentOption = function MomentOption(props) {
    * @param {moment} start
    * @param {moment} end
    */
-  var calculateDiffDay = function calculateDiffDay(start, end) {
-    var endVal = end !== null && end !== void 0 ? end : (0, _dayjs.default)();
-    var days = (0, _dayjs.default)(start).diff((0, _dayjs.default)(endVal), 'day');
+  const calculateDiffDay = (start, end) => {
+    const endVal = end ?? dayjs();
+    const days = dayjs(start).diff(dayjs(endVal), 'day');
     return days;
   };
 
   /**
    * This must be containt schedule selected by user
    */
-  var _currentDate = useOrderContext ? (_orderStatus$options = orderStatus.options) === null || _orderStatus$options === void 0 ? void 0 : _orderStatus$options.moment : currentDate;
-  var _useState = (0, _react.useState)(_currentDate ? (0, _dayjs.default)(validDate(_currentDate)).format('YYYY-MM-DD HH:mm') : null),
-    _useState2 = _slicedToArray(_useState, 2),
-    scheduleSelected = _useState2[0],
-    setScheduleSelected = _useState2[1];
+  const _currentDate = useOrderContext ? orderStatus.options?.moment : currentDate;
+  const [scheduleSelected, setScheduleSelected] = useState(_currentDate ? dayjs(validDate(_currentDate)).format('YYYY-MM-DD HH:mm') : null);
 
   /**
    * Flag to know if user select asap time
    */
-  var _useState3 = (0, _react.useState)(!scheduleSelected),
-    _useState4 = _slicedToArray(_useState3, 2),
-    isAsap = _useState4[0],
-    setIsAsap = _useState4[1];
+  const [isAsap, setIsAsap] = useState(!scheduleSelected);
 
   /**
    * Arrays for save hours and dates lists
    */
-  var _useState5 = (0, _react.useState)([]),
-    _useState6 = _slicedToArray(_useState5, 2),
-    hoursList = _useState6[0],
-    setHourList = _useState6[1];
-  var _useState7 = (0, _react.useState)([]),
-    _useState8 = _slicedToArray(_useState7, 2),
-    datesList = _useState8[0],
-    setDatesList = _useState8[1];
-  var _useState9 = (0, _react.useState)((0, _dayjs.default)(validDate(_currentDate)).format('YYYY-MM-DD')),
-    _useState10 = _slicedToArray(_useState9, 2),
-    dateSelected = _useState10[0],
-    setDateSelected = _useState10[1];
-  var _useState11 = (0, _react.useState)(null),
-    _useState12 = _slicedToArray(_useState11, 2),
-    timeSelected = _useState12[0],
-    setTimeSelected = _useState12[1];
-  var handleChangeDate = function handleChangeDate(date) {
+  const [hoursList, setHourList] = useState([]);
+  const [datesList, setDatesList] = useState([]);
+  const [dateSelected, setDateSelected] = useState(dayjs(validDate(_currentDate)).format('YYYY-MM-DD'));
+  const [timeSelected, setTimeSelected] = useState(null);
+  const handleChangeDate = date => {
     if (!date || date === dateSelected) return;
     setDateSelected(date);
     setTimeSelected(null);
     setIsAsap(false);
     onChangeMoment && onChangeMoment(null);
   };
-  var handleChangeTime = function handleChangeTime(time) {
+  const handleChangeTime = time => {
     if (!time || time === timeSelected) return;
-    var _moment = (0, _dayjs.default)("".concat(dateSelected, " ").concat(time), 'YYYY-MM-DD HH:mm').toDate();
+    const _moment = dayjs(`${dateSelected} ${time}`, 'YYYY-MM-DD HH:mm').toDate();
     setTimeSelected(time);
     setIsAsap(false);
     if (useOrderContext) {
@@ -114,7 +80,7 @@ var MomentOption = function MomentOption(props) {
     }
     onChangeMoment && onChangeMoment(_moment);
   };
-  var handleAsap = function handleAsap() {
+  const handleAsap = () => {
     if (isAsap) return;
     setIsAsap(true);
     if (useOrderContext) {
@@ -122,18 +88,16 @@ var MomentOption = function MomentOption(props) {
     }
     onChangeMoment && onChangeMoment(null);
   };
-  (0, _react.useEffect)(function () {
+  useEffect(() => {
     if (useOrderContext) {
-      var _orderStatus$options2;
-      if ((_orderStatus$options2 = orderStatus.options) !== null && _orderStatus$options2 !== void 0 && _orderStatus$options2.moment) {
-        var _orderStatus$options3;
-        var _currentDate2 = _dayjs.default.utc(validDate((_orderStatus$options3 = orderStatus.options) === null || _orderStatus$options3 === void 0 ? void 0 : _orderStatus$options3.moment)).local();
-        setScheduleSelected(_currentDate2.format('YYYY-MM-DD HH:mm'));
-        setDateSelected(_currentDate2.format('YYYY-MM-DD'));
-        setTimeSelected(_currentDate2.format('HH:mm'));
+      if (orderStatus.options?.moment) {
+        const _currentDate = dayjs.utc(validDate(orderStatus.options?.moment)).local();
+        setScheduleSelected(_currentDate.format('YYYY-MM-DD HH:mm'));
+        setDateSelected(_currentDate.format('YYYY-MM-DD'));
+        setTimeSelected(_currentDate.format('HH:mm'));
         isAsap && setIsAsap(false);
       } else {
-        dateSelected !== (0, _dayjs.default)().format('YYYY-MM-DD') && setDateSelected((0, _dayjs.default)().format('YYYY-MM-DD'));
+        dateSelected !== dayjs().format('YYYY-MM-DD') && setDateSelected(dayjs().format('YYYY-MM-DD'));
         timeSelected !== null && setTimeSelected(null);
         scheduleSelected !== null && setScheduleSelected(null);
         !isAsap && setIsAsap(true);
@@ -142,26 +106,26 @@ var MomentOption = function MomentOption(props) {
       scheduleSelected !== null && setScheduleSelected(null);
       !isAsap && setIsAsap(true);
     }
-  }, [(_orderStatus$options4 = orderStatus.options) === null || _orderStatus$options4 === void 0 ? void 0 : _orderStatus$options4.moment]);
-  (0, _react.useEffect)(function () {
+  }, [orderStatus.options?.moment]);
+  useEffect(() => {
     if (!scheduleSelected) {
       return;
     }
-    var selected = (0, _dayjs.default)(scheduleSelected, 'YYYY-MM-DD HH:mm');
-    var now = (0, _dayjs.default)();
-    var secondsDiff = selected.diff(now, 'seconds');
+    const selected = dayjs(scheduleSelected, 'YYYY-MM-DD HH:mm');
+    const now = dayjs();
+    const secondsDiff = selected.diff(now, 'seconds');
     if (secondsDiff <= 0) {
       handleAsap();
       return;
     }
-    var checkTime = setTimeout(function () {
+    const checkTime = setTimeout(() => {
       handleAsap();
     }, secondsDiff * 1000);
-    return function () {
+    return () => {
       clearTimeout(checkTime);
     };
   }, [scheduleSelected]);
-  (0, _react.useEffect)(function () {
+  useEffect(() => {
     if (isAsap && datesList[0]) {
       setDateSelected(datesList[0]);
       setTimeSelected(null);
@@ -171,37 +135,37 @@ var MomentOption = function MomentOption(props) {
   /**
    * generate a list of available hours
    */
-  var generateHourList = function generateHourList() {
-    var hoursAvailable = [];
-    var isToday = dateSelected === (0, _dayjs.default)().format('YYYY-MM-DD');
-    var isLastDate = dateSelected === (0, _dayjs.default)(maxDate).format('YYYY-MM-DD');
-    var now = new Date();
-    for (var hour = 0; hour < 24; hour++) {
+  const generateHourList = () => {
+    const hoursAvailable = [];
+    const isToday = dateSelected === dayjs().format('YYYY-MM-DD');
+    const isLastDate = dateSelected === dayjs(maxDate).format('YYYY-MM-DD');
+    const now = new Date();
+    for (let hour = 0; hour < 24; hour++) {
       /**
        * Continue if is today and hour is smaller than current hour
        */
-      if (isToday && hour < (now === null || now === void 0 ? void 0 : now.getHours())) continue;
+      if (isToday && hour < now?.getHours()) continue;
       /**
        * Continue if is max date and hour is greater than max date hour
        */
-      if (isLastDate && hour > (maxDate === null || maxDate === void 0 ? void 0 : maxDate.getHours())) continue;
-      for (var minute = 0; minute < 59; minute += 15) {
+      if (isLastDate && hour > maxDate?.getHours()) continue;
+      for (let minute = 0; minute < 59; minute += 15) {
         /**
          * Continue if is today and hour is equal to current hour and minutes is smaller than current minute
          */
-        if (isToday && hour === (now === null || now === void 0 ? void 0 : now.getHours()) && minute <= now.getMinutes()) continue;
+        if (isToday && hour === now?.getHours() && minute <= now.getMinutes()) continue;
         /**
          * Continue if is today and hour is equal to max date hour and minutes is greater than max date minute
          */
-        if (isLastDate && hour === (maxDate === null || maxDate === void 0 ? void 0 : maxDate.getHours()) && minute > maxDate.getMinutes()) continue;
-        var _hour = hour < 10 ? "0".concat(hour) : hour;
-        var startMinute = minute < 10 ? "0".concat(minute) : minute;
-        var endMinute = minute + 14 < 10 ? "0".concat(minute + 14) : minute + 14;
-        var startTime = "".concat(_hour, ":").concat(startMinute);
-        var endTime = "".concat(_hour, ":").concat(endMinute);
+        if (isLastDate && hour === maxDate?.getHours() && minute > maxDate.getMinutes()) continue;
+        const _hour = hour < 10 ? `0${hour}` : hour;
+        const startMinute = minute < 10 ? `0${minute}` : minute;
+        const endMinute = minute + 14 < 10 ? `0${minute + 14}` : minute + 14;
+        const startTime = `${_hour}:${startMinute}`;
+        const endTime = `${_hour}:${endMinute}`;
         hoursAvailable.push({
-          startTime: startTime,
-          endTime: endTime
+          startTime,
+          endTime
         });
       }
     }
@@ -211,33 +175,31 @@ var MomentOption = function MomentOption(props) {
   /**
    * Generate a list of available dates
    */
-  var generateDatesList = function generateDatesList() {
-    var datesList = [];
-    var diff = parseInt(calculateDiffDay(validDate(maxDate)), validDate(minDate));
-    for (var i = 0; i < diff + 1; i++) {
-      datesList.push((0, _dayjs.default)(validDate(minDate)).add(i, 'd').format('YYYY-MM-DD'));
+  const generateDatesList = () => {
+    const datesList = [];
+    const diff = parseInt(calculateDiffDay(validDate(maxDate)), validDate(minDate));
+    for (let i = 0; i < diff + 1; i++) {
+      datesList.push(dayjs(validDate(minDate)).add(i, 'd').format('YYYY-MM-DD'));
     }
     setDatesList(datesList);
   };
-  (0, _react.useEffect)(function () {
+  useEffect(() => {
     if (!dateSelected) return;
     generateHourList();
   }, [dateSelected]);
-  (0, _react.useEffect)(function () {
-    var interval = setInterval(function () {
-      var diff = (0, _dayjs.default)(dateSelected).diff((0, _dayjs.default)(currentDate), 'day');
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const diff = dayjs(dateSelected).diff(dayjs(currentDate), 'day');
       if (diff === 0) {
         generateHourList();
       }
     }, 1000);
-    return function () {
-      return clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, [dateSelected]);
-  (0, _react.useEffect)(function () {
+  useEffect(() => {
     generateDatesList();
   }, [maxDate, minDate]);
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, UIComponent && /*#__PURE__*/React.createElement(UIComponent, _extends({}, props, {
     isAsap: isAsap,
     minDate: validDate(minDate),
     maxDate: validDate(maxDate),
@@ -250,52 +212,51 @@ var MomentOption = function MomentOption(props) {
     handleAsap: handleAsap
   })));
 };
-exports.MomentOption = MomentOption;
 MomentOption.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
-  UIComponent: _propTypes.default.elementType,
+  UIComponent: PropTypes.elementType,
   /**
    * minDate, this must be contains a custom date selected
    */
-  minDate: _propTypes.default.instanceOf(Date),
+  minDate: PropTypes.instanceOf(Date),
   /**
    * maxDate, this must be contains a custom date selected
    */
-  maxDate: _propTypes.default.instanceOf(Date).isRequired,
+  maxDate: PropTypes.instanceOf(Date).isRequired,
   /**
    * currentDate, this must be contains a custom date selected
    */
-  currentDate: _propTypes.default.instanceOf(Date),
+  currentDate: PropTypes.instanceOf(Date),
   /**
    * currentDate, this must be contains a custom date selected
    */
-  useOrderContext: _propTypes.default.bool,
+  useOrderContext: PropTypes.bool,
   /**
    * Method to return moment selection
    */
-  onChangeMoment: _propTypes.default.func,
+  onChangeMoment: PropTypes.func,
   /**
    * Components types before [PUT HERE COMPONENT NAME]
    * Array of type components, the parent props will pass to these components
    */
-  beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
+  beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
    * Components types after [PUT HERE COMPONENT NAME]
    * Array of type components, the parent props will pass to these components
    */
-  afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
+  afterComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
    * Elements before [PUT HERE COMPONENT NAME]
    * Array of HTML/Components elements, these components will not get the parent props
    */
-  beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
+  beforeElements: PropTypes.arrayOf(PropTypes.element),
   /**
    * Elements after [PUT HERE COMPONENT NAME]
    * Array of HTML/Components elements, these components will not get the parent props
    */
-  afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
+  afterElements: PropTypes.arrayOf(PropTypes.element)
 };
 MomentOption.defaultProps = {
   useOrderContext: true,
