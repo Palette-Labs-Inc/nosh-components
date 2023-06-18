@@ -71,11 +71,8 @@ var ProductComponent = function ProductComponent(props) {
   };
   var initOptions = function initOptions() {
     // console.log('===== Init options =====');
-    var optionList = [];
-    var extras = product.extras;
-    for (var eIdx = 0; eIdx < extras.length; eIdx++) {
-      optionList.push.apply(optionList, _toConsumableArray(extras[eIdx].options));
-    }
+    var optionList = product.options;
+
     for (var oIdx = 0; oIdx < optionList.length; oIdx++) {
       var option = optionList[oIdx];
       option['isDisplay'] = true;

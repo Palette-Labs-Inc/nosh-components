@@ -275,18 +275,16 @@ export const ProductForm = (props) => {
    * @param {number} suboptionId Suboption id
    */
   const removeRelatedOptions = (productCart, suboptionId) => {
-    product.product.extras.forEach(_extra => {
-      _extra.options.forEach(_option => {
-        if (_option.respect_to === suboptionId) {
-          const suboptions = productCart.options[`id:${_option.id}`]?.suboptions
-          if (suboptions) {
-            Object.keys(suboptions).map(suboptionKey => removeRelatedOptions(productCart, parseInt(suboptionKey.split(':')[1])))
-          }
-          if (productCart.options[`id:${_option.id}`]) {
-            productCart.options[`id:${_option.id}`].suboptions = {}
-          }
+    product.product.options.forEach(_option => {
+      if (_option.respect_to === suboptionId) {
+        const suboptions = productCart.options[`id:${_option.id}`]?.suboptions
+        if (suboptions) {
+          Object.keys(suboptions).map(suboptionKey => removeRelatedOptions(productCart, parseInt(suboptionKey.split(':')[1])))
         }
-      })
+        if (productCart.options[`id:${_option.id}`]) {
+          productCart.options[`id:${_option.id}`].suboptions = {}
+        }
+      }
     })
   }
 
@@ -628,9 +626,9 @@ export const ProductForm = (props) => {
    */
   useEffect(() => {
     if (product?.product && product.product?.extras?.length > 0) {
-      const options = [].concat(...product.product.extras.map(extra => extra.options.filter(
+      const options = [].concat(...product.product.options.filter(
         option => {
-          const preselected = checkHasPreselected(extra.options, option)
+          const preselected = checkHasPreselected(options, option)
           return (
             ((option.min === 1 &&
             option.max === 1 &&
@@ -639,7 +637,7 @@ export const ProductForm = (props) => {
           (!option?.conditioned || (option?.conditioned && preselected))
           )
         }
-      )))
+      ))
 
       if (!options?.length) {
         return
@@ -685,12 +683,12 @@ export const ProductForm = (props) => {
   if (isStarbucks) {
     useEffect(() => {
       if (product?.product && Object.keys(product?.product).length) {
-        const options = [].concat(...product.product.extras.map(extra => extra.options.filter(
+        const options = [].concat(...product.product.options.filter(
           option => (
             option.name === 'Tamaño' &&
             option.suboptions.filter(suboption => suboption.name === 'Grande (16oz - 437ml)').length === 1
           )
-        )))
+        ))
         if (!options?.length) {
           return
         }

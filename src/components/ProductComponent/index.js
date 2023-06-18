@@ -45,12 +45,7 @@ export const ProductComponent = (props) => {
 
   const initOptions = () => {
     // console.log('===== Init options =====');
-    let optionList = [];
-    let extras = product.extras;
-    for (let eIdx = 0; eIdx < extras.length; eIdx++) {
-      optionList.push(...extras[eIdx].options);
-    }
-
+    let optionList = product.options;
     for (let oIdx = 0; oIdx < optionList.length; oIdx++) {
       let option = optionList[oIdx];
       option['isDisplay'] = true;

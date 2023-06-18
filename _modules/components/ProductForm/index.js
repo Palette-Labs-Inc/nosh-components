@@ -416,8 +416,7 @@ var ProductForm = function ProductForm(props) {
    * @param {number} suboptionId Suboption id
    */
   var removeRelatedOptions = function removeRelatedOptions(productCart, suboptionId) {
-    product.product.extras.forEach(function (_extra) {
-      _extra.options.forEach(function (_option) {
+    product.product.options.forEach(function (_option) {
         if (_option.respect_to === suboptionId) {
           var _productCart$options2;
           var suboptions = (_productCart$options2 = productCart.options["id:".concat(_option.id)]) === null || _productCart$options2 === void 0 ? void 0 : _productCart$options2.suboptions;
@@ -430,7 +429,6 @@ var ProductForm = function ProductForm(props) {
             productCart.options["id:".concat(_option.id)].suboptions = {};
           }
         }
-      });
     });
   };
 
@@ -820,15 +818,14 @@ var ProductForm = function ProductForm(props) {
     var _product$product10, _product$product10$ex;
     if (product !== null && product !== void 0 && product.product && ((_product$product10 = product.product) === null || _product$product10 === void 0 ? void 0 : (_product$product10$ex = _product$product10.extras) === null || _product$product10$ex === void 0 ? void 0 : _product$product10$ex.length) > 0) {
       var _ref6, _ref7;
-      var options = (_ref6 = []).concat.apply(_ref6, _toConsumableArray(product.product.extras.map(function (extra) {
-        return extra.options.filter(function (option) {
-          var preselected = checkHasPreselected(extra.options, option);
+      var options = (_ref6 = []).concat.apply(_ref6, _toConsumableArray(product.options.filter(function (option) {
+          var preselected = checkHasPreselected(product.options, option);
           return (option.min === 1 && option.max === 1 && option.suboptions.filter(function (suboption) {
             return suboption.enabled;
           }).length === 1 || option.suboptions.filter(function (suboption) {
             return suboption.preselected;
           }).length > 0) && (!(option !== null && option !== void 0 && option.conditioned) || (option === null || option === void 0 ? void 0 : option.conditioned) && preselected);
-        });
+
       })));
       if (!(options !== null && options !== void 0 && options.length)) {
         return;
@@ -875,12 +872,10 @@ var ProductForm = function ProductForm(props) {
     (0, _react.useEffect)(function () {
       if (product !== null && product !== void 0 && product.product && Object.keys(product === null || product === void 0 ? void 0 : product.product).length) {
         var _ref8, _ref9;
-        var options = (_ref8 = []).concat.apply(_ref8, _toConsumableArray(product.product.extras.map(function (extra) {
-          return extra.options.filter(function (option) {
+        var options = (_ref8 = []).concat.apply(_ref8, _toConsumableArray(product.options.filter(function (option) {
             return option.name === 'Tamaño' && option.suboptions.filter(function (suboption) {
               return suboption.name === 'Grande (16oz - 437ml)';
             }).length === 1;
-          });
         })));
         if (!(options !== null && options !== void 0 && options.length)) {
           return;
