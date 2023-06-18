@@ -38,17 +38,6 @@ export const ProductDetail = () => {
         "rank": 1,
         "enabled": true
       },
-      "extras": [
-        {
-          "id": 49,
-          "business_id": 41,
-          "name": "McBonalds option1",
-          "description": null,
-          "enabled": true,
-          "pivot": {
-            "product_id": 1314,
-            "extra_id": 49
-          },
           "options": [
             {
               "id": 53,
@@ -249,8 +238,7 @@ export const ProductDetail = () => {
               ]
             }
           ]
-        }
-      ],
+        },
       "ingredients": [
         {
           "id": 1,

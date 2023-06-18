@@ -69,7 +69,7 @@ export const ProductFormUI = (props) => {
         ))
       }
       {
-        product?.extras.map(extra => extra.options.map(option => {
+        product?.options.map(option => {
           const currentState = productCart.options[`id:${option.id}`] || {}
           return (
             <React.Fragment key={option.id}>
@@ -97,7 +97,7 @@ export const ProductFormUI = (props) => {
               }
             </React.Fragment>
           )
-        }))
+        })
       }
       <div>
         Special comment:<br />
