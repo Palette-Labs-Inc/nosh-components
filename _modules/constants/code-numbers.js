@@ -1,10 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.CODES = void 0;
-var CODES = [{
+export const CODES = [{
   countryCode: 'DZ',
   phoneCode: '213',
   countryName: 'Algeria'
@@ -865,4 +859,3 @@ var CODES = [{
   phoneCode: '263',
   countryName: 'Zimbabwe'
 }];
-exports.CODES = CODES;

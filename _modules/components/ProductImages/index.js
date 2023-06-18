@@ -1,56 +1,50 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.ProductImages = void 0;
-var _react = _interopRequireDefault(require("react"));
-var _propTypes = _interopRequireDefault(require("prop-types"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-var ProductImages = function ProductImages(props) {
-  var hero = props.hero,
-    gallery = props.gallery,
-    UIComponent = props.UIComponent;
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
+import React from 'react';
+import PropTypes from 'prop-types';
+export const ProductImages = props => {
+  const {
+    hero,
+    gallery,
+    UIComponent
+  } = props;
+  return /*#__PURE__*/React.createElement(React.Fragment, null, UIComponent && /*#__PURE__*/React.createElement(UIComponent, _extends({}, props, {
     hero: hero,
     gallery: gallery
   })));
 };
-exports.ProductImages = ProductImages;
 ProductImages.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
-  UIComponent: _propTypes.default.elementType,
+  UIComponent: PropTypes.elementType,
   /**
    * hero, this must be contain the main product image
    */
-  hero: _propTypes.default.string,
+  hero: PropTypes.string,
   /**
    * gallery, this must be contain the array of product images
    */
-  gallery: _propTypes.default.arrayOf(_propTypes.default.string),
+  gallery: PropTypes.arrayOf(PropTypes.string),
   /**
    * Components types before product images
    * Array of type components, the parent props will pass to these components
    */
-  beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
+  beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
    * Components types after product images
    * Array of type components, the parent props will pass to these components
    */
-  afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
+  afterComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
    * Elements before product images
    * Array of HTML/Components elements, these components will not get the parent props
    */
-  beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
+  beforeElements: PropTypes.arrayOf(PropTypes.element),
   /**
    * Elements after product images
    * Array of HTML/Components elements, these components will not get the parent props
    */
-  afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
+  afterElements: PropTypes.arrayOf(PropTypes.element)
 };
 ProductImages.defaultProps = {
   beforeComponents: [],
