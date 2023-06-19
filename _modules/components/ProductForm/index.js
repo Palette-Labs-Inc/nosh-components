@@ -184,8 +184,8 @@ export const ProductForm = props => {
    */
   const getUnitTotal = productCart => {
     let subtotal = 0;
-    for (let j = 0; j < product.options?.length; j++) {
-      const option = product.options[j];
+    for (let j = 0; j < product.product.options?.length; j++) {
+      const option = product.product.options[j];
       for (let k = 0; k < option.suboptions?.length; k++) {
         const suboption = option.suboptions[k];
         if (productCart.options[`id:${option.id}`]?.suboptions[`id:${suboption.id}`]?.selected) {
